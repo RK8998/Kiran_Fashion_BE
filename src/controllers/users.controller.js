@@ -26,4 +26,29 @@ const createUserController = async (req, res) => {
   }
 };
 
-module.exports = { createUserController };
+const getUsersListController = async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+
+    if (!users || users.length === 0) {
+      return sendSuccessResponse(res, {
+        ...ApiResponse.NOT_FOUND,
+        message: 'No users found',
+        data: []
+      });
+    }
+
+    sendSuccessResponse(res, {
+      ...ApiResponse.SUCCESS,
+      data: users
+    });
+  } catch (error) {
+    sendErrorResponse(res, {
+      ...ApiResponse.INTERNAL_SERVER_ERROR,
+      message: error.message || 'Failed to fetch users',
+      error
+    });
+  }
+};
+
+module.exports = { createUserController, getUsersListController };
