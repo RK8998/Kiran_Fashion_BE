@@ -1,8 +1,14 @@
 // constants/apiResponse.js
-const ApiResponse = Object.freeze({
+const ApiResponse = {
   SUCCESS: {
     status: 200,
     message: 'SUCCESS',
+    messageCode: null
+  },
+  CREATED: {
+    status: 201,
+    success: true,
+    message: 'RESOURCE_CREATED',
     messageCode: null
   },
   BAD_REQUEST: {
@@ -35,6 +41,6 @@ const ApiResponse = Object.freeze({
     message: 'INTERNAL_SERVER_ERROR',
     messageCode: null
   }
-});
+};
 
 module.exports = { ApiResponse };

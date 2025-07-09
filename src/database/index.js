@@ -6,7 +6,8 @@ const connection = mongoose.connection;
 const dbURI = process.env.DB_URI;
 const databaseOptions = {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  autoIndex: false
 };
 
 const initializeDBConnection = () => {

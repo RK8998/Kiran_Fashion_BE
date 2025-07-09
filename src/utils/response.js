@@ -41,7 +41,7 @@ const sendErrorResponse = (res, { status = 500, message = 'An error occurred', e
     console.error('[API Error]', error);
   }
 
-  return res.status(statusCode).json({
+  return res.status(status).json({
     success: false,
     status,
     message
