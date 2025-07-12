@@ -3,7 +3,6 @@ const { ApiResponse } = require('../utils/constants.js');
 const { generateJWTToken } = require('../utils/helper.js');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/response.js');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 const loginController = async (req, res) => {
   try {
@@ -31,7 +30,7 @@ const loginController = async (req, res) => {
     if (!user.isActive) {
       return sendErrorResponse(res, {
         ...ApiResponse.FORBIDDEN,
-        message: 'Your account is disabled'
+        message: 'Your account is not active'
       });
     }
 

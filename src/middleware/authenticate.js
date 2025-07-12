@@ -19,9 +19,7 @@ const authenticate = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
   // console.log('Token:', token);
   try {
-    console.log('************', token, process.env.JWT_SECRET_KEY);
     const decoded = validateToken(token);
-    console.log('🧑‍💻 || decoded:', decoded);
 
     req.user = decoded;
     next();
