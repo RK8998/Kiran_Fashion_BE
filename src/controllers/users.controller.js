@@ -171,15 +171,15 @@ const deleteUsersByIdController = async (req, res) => {
       });
     }
 
-    const updatedUser = await UserModel.findByIdAndUpdate(
+    const deletedUser = await UserModel.findByIdAndUpdate(
       userId,
       { deleted_at: new Date() },
       { new: true }
     );
 
-    if (!updatedUser) {
+    if (!deletedUser) {
       return sendErrorResponse(res, {
-        ...ApiResponse.NOT_FOUND,
+        ...ApiResponse.BAD_REQUEST,
         message: 'Failed to delete user',
         data: []
       });
@@ -187,7 +187,7 @@ const deleteUsersByIdController = async (req, res) => {
 
     sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
-      data: updatedUser,
+      data: deletedUser,
       message: 'User deleted successfully'
     });
   } catch (error) {

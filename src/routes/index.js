@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+const { productRoutes } = require('./products');
 const { userRoutes } = require('./users');
 const { authRoutes } = require('./auth');
 
-router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+router.use('/products', productRoutes);
 
 router.get('/test-server', (req, res) => {
   res.status(200).json({
