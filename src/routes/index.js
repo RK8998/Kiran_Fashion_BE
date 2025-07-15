@@ -4,10 +4,12 @@ const router = express.Router();
 const { productRoutes } = require('./products');
 const { userRoutes } = require('./users');
 const { authRoutes } = require('./auth');
+const { notesRoutes } = require('./notes');
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/products', productRoutes);
+router.use('/notes', notesRoutes);
 
 router.get('/test-server', (req, res) => {
   res.status(200).json({
