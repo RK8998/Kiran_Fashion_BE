@@ -6,9 +6,10 @@ const bcrypt = require('bcrypt');
 
 const loginController = async (req, res) => {
   try {
-    const { email = '', password = '' } = req.body;
+    const email = req?.body?.email || '';
+    const password = req?.body?.password || '';
 
-    if (!email || !password) throw new Error('Email and password are required');
+    if (!email || !password) throw new Error('Email and password are required.');
 
     const user = await UserModel.findOne({ email });
     if (!user) {
