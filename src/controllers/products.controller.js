@@ -19,7 +19,7 @@ const getProductsListController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -53,7 +53,7 @@ const getProductByIdController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -75,7 +75,7 @@ const createProductController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -127,7 +127,7 @@ const deleteProductController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -161,10 +161,9 @@ const updateProductController = async (req, res) => {
       data: updatedProduct
     });
   } catch (error) {
-    // res.status(500).json({ error: 'Failed to create user' });
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }

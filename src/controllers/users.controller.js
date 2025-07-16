@@ -23,10 +23,9 @@ const createUserController = async (req, res) => {
       data: newUser
     });
   } catch (error) {
-    // res.status(500).json({ error: 'Failed to create user' });
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -71,10 +70,10 @@ const updateUserController = async (req, res) => {
       data: updatedUser
     });
   } catch (error) {
-    // res.status(500).json({ error: 'Failed to create user' });
+    // res.status(500).json({ error: 'Something went wrong.' });
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -110,7 +109,7 @@ const getUsersListController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to fetch users',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -144,7 +143,7 @@ const getUsersByIdController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to fetch users',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -193,7 +192,7 @@ const deleteUsersByIdController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to fetch users',
+      message: error.message || 'Something went wrong.',
       error
     });
   }

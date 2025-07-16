@@ -56,7 +56,7 @@ const getNotesListController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to get notes list',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -138,7 +138,7 @@ const createNotesController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -190,7 +190,7 @@ const deleteNotesController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -227,7 +227,7 @@ const updateNotesController = async (req, res) => {
     // res.status(500).json({ error: 'Failed to create user' });
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }

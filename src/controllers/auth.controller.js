@@ -51,7 +51,7 @@ const loginController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to fetch users',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
