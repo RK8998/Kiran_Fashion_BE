@@ -1,11 +1,11 @@
 const UserModel = require('../models/users.js');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/response');
-const { ApiResponse } = require('../utils/constants.js');
+const { ApiResponse, ROLES } = require('../utils/constants.js');
 
 const createUserController = async (req, res) => {
   try {
     const loggedInUser = req.user;
-    if (loggedInUser.role !== 'admin')
+    if (loggedInUser.role !== ROLES.admin)
       return sendErrorResponse(res, {
         ...ApiResponse.UNAUTHORIZED,
         message: 'You do not have permission to create a user'
@@ -38,7 +38,7 @@ const updateUserController = async (req, res) => {
     const userId = req.params.id;
     const data = req.body;
 
-    if (loggedInUser.role !== 'admin')
+    if (loggedInUser.role !== ROLES.admin)
       return sendErrorResponse(res, {
         ...ApiResponse.UNAUTHORIZED,
         message: 'You do not have permission to update a user'
@@ -81,17 +81,32 @@ const updateUserController = async (req, res) => {
 
 const getUsersListController = async (req, res) => {
   try {
-    const { page, rows } = req.query;
+    const { page, rows, search = '' } = req.query;
 
     const offset = (page - 1) * rows;
 
     const filter = {
-      $and: [{ deleted_at: null }, { role: { $ne: 'admin' } }]
+      // $and: [{ $text: { $search: search } }, { deleted_at: null }, { role: { $ne: ROLES.admin } }]
+      deleted_at: null,
+      role: { $ne: ROLES.admin }
     };
+
+    if (search.trim()) {
+      // filter['$text'] = { $search: search.trim() };
+      const regex = new RegExp(search.trim(), 'i'); // 'i' for case-insensitive
+      filter.$or = [{ name: regex }, { email: regex }];
+    }
 
     const totalRecords = await UserModel.countDocuments(filter);
 
-    const results = await UserModel.find(filter).select({ password: 0 }).skip(offset).limit(rows);
+    // const results = await UserModel.find(filter).select({ password: 0 }).skip(offset).limit(rows);
+    const results = await UserModel.find(filter)
+      // .select({ password: 0, score: { $meta: 'textScore' } })
+      // .sort(search ? { score: { $meta: 'textScore' } } : { created_at: -1 })
+      .select({ password: 0 })
+      .sort({ created_at: -1 })
+      .skip(offset)
+      .limit(rows);
 
     if (!results || results.length === 0) {
       return sendSuccessResponse(res, {

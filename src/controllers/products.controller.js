@@ -4,10 +4,15 @@ const { ApiResponse } = require('../utils/constants');
 
 const getProductsListController = async (req, res) => {
   try {
-    const { page, rows } = req.query;
+    const { page, rows, search = '' } = req.query;
     const offset = (page - 1) * rows;
 
     const filter = { deleted_at: null };
+    if (search.trim()) {
+      const regex = new RegExp(search.trim(), 'i');
+      filter['name'] = regex;
+    }
+
     const results = await ProductModel.find(filter).skip(offset).limit(rows);
     const totalRecords = await ProductModel.countDocuments(filter);
 

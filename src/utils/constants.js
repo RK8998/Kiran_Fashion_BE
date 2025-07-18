@@ -1,3 +1,8 @@
+const ROLES = {
+  admin: 'admin',
+  user: 'user'
+};
+
 // constants/apiResponse.js
 const ApiResponse = {
   SUCCESS: {
@@ -43,4 +48,4 @@ const ApiResponse = {
   }
 };
 
-module.exports = { ApiResponse };
+module.exports = { ApiResponse, ROLES };

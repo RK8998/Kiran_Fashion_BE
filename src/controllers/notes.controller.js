@@ -7,6 +7,7 @@ const getNotesListController = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const rows = parseInt(req.query.rows) || 10;
+    const search = req.query.search || '';
     const offset = (page - 1) * rows;
 
     // const results = await NotesModel.find({
@@ -17,36 +18,50 @@ const getNotesListController = async (req, res) => {
     //   .skip(offset)
     //   .limit(rows);
 
-    const results = await NotesModel.aggregate([
-      { $match: { deleted_at: null } },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          as: 'created_by'
-        }
-      },
-      {
-        $unwind: '$created_by'
-      },
-      {
-        $sort: { created_at: -1 }
-      },
-      {
-        $skip: offset
-      },
-      {
-        $limit: rows
-      },
-      {
-        $project: { created_by: { password: 0 } }
-      }
-    ]);
+    const filter = [];
+    if (search.trim()) {
+      const regex = new RegExp(search.trim(), 'i');
+      filter.push({ $match: { deleted_at: null, title: regex } });
+    } else {
+      filter.push({ $match: { deleted_at: null } });
+    }
 
-    const total = await NotesModel.countDocuments({
-      deleted_at: null
-    });
+    filter.push(
+      ...[
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'created_by',
+            foreignField: '_id',
+            as: 'created_by'
+          }
+        },
+        {
+          $unwind: '$created_by'
+        },
+        {
+          $sort: { created_at: -1 }
+        },
+        {
+          $skip: offset
+        },
+        {
+          $limit: rows
+        },
+        {
+          $project: { created_by: { password: 0 } }
+        }
+      ]
+    );
+
+    const results = await NotesModel.aggregate(filter);
+
+    const countFilter = { deleted_at: null };
+    if (search.trim()) {
+      const regex = new RegExp(search.trim(), 'i');
+      countFilter.title = regex;
+    }
+    const total = await NotesModel.countDocuments(countFilter);
 
     return sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
