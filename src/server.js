@@ -13,9 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-app.use('/api', initRoutes);
-
 initializeDBConnection();
+
+app.use('/api', initRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}/api`);

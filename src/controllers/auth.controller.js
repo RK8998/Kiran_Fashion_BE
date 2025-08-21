@@ -51,10 +51,26 @@ const loginController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to fetch users',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
 };
 
-module.exports = { loginController };
+const getLoggedInUserDetails = async (req, res) => {
+  try {
+    sendSuccessResponse(res, {
+      ...ApiResponse.SUCCESS,
+      message: 'Logged in user details fetched successfully.',
+      data: req.user
+    });
+  } catch (error) {
+    sendErrorResponse(res, {
+      ...ApiResponse.INTERNAL_SERVER_ERROR,
+      message: error.message || 'Something went wrong.',
+      error
+    });
+  }
+};
+
+module.exports = { loginController, getLoggedInUserDetails };

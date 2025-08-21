@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { ROLES } = require('../utils/constants');
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -26,7 +27,7 @@ const userSchema = new Schema(
     },
     role: {
       type: Schema.Types.String,
-      enum: ['admin', 'user'],
+      enum: [ROLES.admin, ROLES.user],
       default: 'user'
     },
     password: {

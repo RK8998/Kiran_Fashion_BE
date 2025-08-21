@@ -4,22 +4,27 @@ const { ApiResponse } = require('../utils/constants');
 
 const getProductsListController = async (req, res) => {
   try {
-    const { page, rows } = req.query;
+    const { page, rows, search = '' } = req.query;
     const offset = (page - 1) * rows;
 
     const filter = { deleted_at: null };
-    const results = await ProductModel.find(filter).skip(offset).limit(rows);
+    if (search.trim()) {
+      const regex = new RegExp(search.trim(), 'i');
+      filter['name'] = regex;
+    }
+
+    const results = await ProductModel.find(filter).skip(offset).limit(rows).sort({ _id: -1 });
     const totalRecords = await ProductModel.countDocuments(filter);
 
     sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
-      data: { results, totalRecords },
+      data: { results, total: totalRecords },
       message: 'Products fetched successfully'
     });
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -53,7 +58,7 @@ const getProductByIdController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -75,7 +80,7 @@ const createProductController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -127,7 +132,7 @@ const deleteProductController = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }
@@ -161,10 +166,9 @@ const updateProductController = async (req, res) => {
       data: updatedProduct
     });
   } catch (error) {
-    // res.status(500).json({ error: 'Failed to create user' });
     sendErrorResponse(res, {
       ...ApiResponse.INTERNAL_SERVER_ERROR,
-      message: error.message || 'Failed to create user',
+      message: error.message || 'Something went wrong.',
       error
     });
   }

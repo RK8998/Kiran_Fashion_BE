@@ -1,10 +1,12 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const UserModel = require('../models/users.js');
+const { ROLES } = require('../utils/constants.js');
 
 const seedAdminUser = async () => {
   try {
     // Connect to MongoDB
+    console.log('********', process.env.DB_URI);
     await mongoose.connect(process.env.DB_URI);
 
     const existAdmin = await UserModel.findOne({ email: 'admin@gmail.com' });
@@ -19,7 +21,7 @@ const seedAdminUser = async () => {
       email: 'admin@gmail.com',
       phone: 98798556644,
       password: 'Admin@123',
-      role: 'admin',
+      role: ROLES.admin,
       isActive: true
     });
 

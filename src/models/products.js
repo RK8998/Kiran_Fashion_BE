@@ -9,6 +9,14 @@ const productsSchema = new Schema(
       unique: true,
       trim: true
     },
+    base_amount: {
+      type: Schema.Types.Double,
+      required: true
+    },
+    sell_amount: {
+      type: Schema.Types.Double,
+      required: true
+    },
     remark: {
       type: Schema.Types.String,
       trim: true,
