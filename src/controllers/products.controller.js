@@ -13,12 +13,12 @@ const getProductsListController = async (req, res) => {
       filter['name'] = regex;
     }
 
-    const results = await ProductModel.find(filter).skip(offset).limit(rows);
+    const results = await ProductModel.find(filter).skip(offset).limit(rows).sort({ _id: -1 });
     const totalRecords = await ProductModel.countDocuments(filter);
 
     sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
-      data: { results, totalRecords },
+      data: { results, total: totalRecords },
       message: 'Products fetched successfully'
     });
   } catch (error) {

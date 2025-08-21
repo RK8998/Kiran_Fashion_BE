@@ -26,14 +26,34 @@ const getSalesListController = async (req, res) => {
       }
     }
 
-    const results = await SalesModel.find(filter).skip(offset).limit(rows).sort({ created_at: -1 });
+    const results = await SalesModel.find(filter)
+      .populate('product_id', 'name')
+      .populate('user_id', 'name email phone')
+      .skip(offset)
+      .limit(rows)
+      .sort({ created_at: -1 });
+
+    // ✅ Totals in one query
+    const totalsAgg = await SalesModel.aggregate([
+      { $match: filter },
+      {
+        $group: {
+          _id: null,
+          totalProfit: { $sum: '$profit' },
+          totalSales: { $sum: '$sell_amount' },
+          totalProducts: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const { totalProfit = 0, totalSales = 0, totalProducts = 0 } = totalsAgg[0] || {};
 
     const total = await SalesModel.countDocuments(filter);
 
     sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
       message: 'Sales List fetched successfully.',
-      data: { results, total }
+      data: { results, total, totalProfit, totalSales, totalProducts }
     });
   } catch (error) {
     sendErrorResponse(res, {

@@ -93,7 +93,8 @@ const getUsersListController = async (req, res) => {
 
     if (search.trim()) {
       // filter['$text'] = { $search: search.trim() };
-      const regex = new RegExp(search.trim(), 'i'); // 'i' for case-insensitive
+      // const regex = new RegExp(search.trim(), 'i'); // 'i' for case-insensitive
+      const regex = new RegExp('^' + search.trim(), 'i'); // Match from the start
       filter.$or = [{ name: regex }, { email: regex }];
     }
 
@@ -110,15 +111,15 @@ const getUsersListController = async (req, res) => {
 
     if (!results || results.length === 0) {
       return sendSuccessResponse(res, {
-        ...ApiResponse.NOT_FOUND,
+        ...ApiResponse.SUCCESS,
         message: 'No users found',
-        data: { results: [], totalRecords: 0 }
+        data: { results: [], total: 0 }
       });
     }
 
     sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
-      data: { results, totalRecords },
+      data: { results, total: totalRecords },
       message: 'Users fetched successfully'
     });
   } catch (error) {

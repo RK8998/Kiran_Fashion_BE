@@ -21,10 +21,19 @@ const salesSchema = new Schema(
       type: Schema.Types.Double,
       required: true
     },
+    discount: {
+      type: Schema.Types.Double,
+      default: 0
+      // required: true
+    },
     profit: {
       type: Schema.Types.Double,
       // required: true
       default: 0
+    },
+    remark: {
+      type: Schema.Types.String,
+      default: ''
     },
     deleted_at: {
       type: Schema.Types.Date,
@@ -49,7 +58,7 @@ salesSchema.index({ base_amount: 1, sell_amount: 1, profit: 1 });
  * This will calculate profit before inserting or updating using save()
  */
 salesSchema.pre('save', function (next) {
-  this.profit = this.sell_amount - this.base_amount;
+  this.profit = this.sell_amount - this.discount - this.base_amount;
   next();
 });
 
@@ -57,17 +66,31 @@ salesSchema.pre('save', function (next) {
  * ✅ Pre-update middleware for findOneAndUpdate
  * We need to calculate profit manually when updating base_amount or sell_amount
  */
+// salesSchema.pre('findOneAndUpdate', function (next) {
+//   const update = this.getUpdate();
+
+//   if (update.base_amount !== undefined || update.sell_amount !== undefined) {
+//     const baseAmount = update.base_amount ?? this._update.base_amount;
+//     const sellAmount = update.sell_amount ?? this._update.sell_amount;
+
+//     // If both exist, calculate profit
+//     if (baseAmount !== undefined && sellAmount !== undefined) {
+//       update.profit = sellAmount - baseAmount;
+//     }
+//   }
+
+//   next();
+// });
+
 salesSchema.pre('findOneAndUpdate', function (next) {
   const update = this.getUpdate();
 
-  if (update.base_amount !== undefined || update.sell_amount !== undefined) {
-    const baseAmount = update.base_amount ?? this._update.base_amount;
-    const sellAmount = update.sell_amount ?? this._update.sell_amount;
+  const baseAmount = update.base_amount ?? this._update.base_amount;
+  const sellAmount = update.sell_amount ?? this._update.sell_amount;
+  const discount = update.discount ?? this._update.discount ?? 0;
 
-    // If both exist, calculate profit
-    if (baseAmount !== undefined && sellAmount !== undefined) {
-      update.profit = sellAmount - baseAmount;
-    }
+  if (baseAmount !== undefined && sellAmount !== undefined) {
+    update.profit = sellAmount - discount - baseAmount;
   }
 
   next();

@@ -6,6 +6,7 @@ const { ROLES } = require('../utils/constants.js');
 const seedAdminUser = async () => {
   try {
     // Connect to MongoDB
+    console.log('********', process.env.DB_URI);
     await mongoose.connect(process.env.DB_URI);
 
     const existAdmin = await UserModel.findOne({ email: 'admin@gmail.com' });

@@ -20,7 +20,7 @@ const getNotesListController = async (req, res) => {
 
     const filter = [];
     if (search.trim()) {
-      const regex = new RegExp(search.trim(), 'i');
+      const regex = new RegExp('^' + search.trim(), 'i'); // Match from the start
       filter.push({ $match: { deleted_at: null, title: regex } });
     } else {
       filter.push({ $match: { deleted_at: null } });
