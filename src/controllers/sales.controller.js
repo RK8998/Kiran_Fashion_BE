@@ -1,7 +1,6 @@
 const SalesModel = require('../models/sales');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/response');
 const { ApiResponse } = require('../utils/constants');
-const mongoose = require('mongoose');
 
 const getSalesListController = async (req, res) => {
   try {

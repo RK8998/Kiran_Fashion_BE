@@ -6,8 +6,10 @@ const { userRoutes } = require('./users');
 const { authRoutes } = require('./auth');
 const { notesRoutes } = require('./notes');
 const { salesRoutes } = require('./sales');
+const { dashboardRoutes } = require('./dashboard');
 
 router.use('/auth', authRoutes);
+router.use('/dashboard', dashboardRoutes);
 router.use('/users', userRoutes);
 router.use('/products', productRoutes);
 router.use('/notes', notesRoutes);
