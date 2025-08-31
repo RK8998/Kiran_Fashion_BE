@@ -6,13 +6,15 @@ const {
   getUsersListController,
   getUsersByIdController,
   deleteUsersByIdController,
-  updateUserController
+  updateUserController,
+  changePasswordController
 } = require('../controllers/users.controller');
 const { authenticate } = require('../middleware/authenticate');
 
 router.get('/', authenticate, getUsersListController);
 router.get('/:id', authenticate, getUsersByIdController);
 router.post('/', authenticate, createUserController);
+router.put('/change-password', authenticate, changePasswordController);
 router.put('/:id', authenticate, updateUserController);
 router.delete('/:id', authenticate, deleteUsersByIdController);
 

@@ -33,6 +33,7 @@ const createUserController = async (req, res) => {
 
 const updateUserController = async (req, res) => {
   try {
+    console.log('updateUserController');
     const loggedInUser = req.user;
 
     const userId = req.params.id;
@@ -68,6 +69,63 @@ const updateUserController = async (req, res) => {
       ...ApiResponse.SUCCESS,
       message: 'User updated successfully',
       data: updatedUser
+    });
+  } catch (error) {
+    // res.status(500).json({ error: 'Something went wrong.' });
+    sendErrorResponse(res, {
+      ...ApiResponse.INTERNAL_SERVER_ERROR,
+      message: error.message || 'Something went wrong.',
+      error
+    });
+  }
+};
+
+const changePasswordController = async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const userId = req.body.user_id;
+    const data = {
+      password: req.body.password
+    };
+
+    if (loggedInUser.role !== ROLES.admin)
+      return sendErrorResponse(res, {
+        ...ApiResponse.UNAUTHORIZED,
+        message: 'You do not have permission to update a user'
+      });
+
+    // const updatedUser = await UserModel.findByIdAndUpdate(userId, data, {
+    //   new: true,
+    //   runValidators: true
+    // }).select({ password: 0 });
+
+    // if (!updatedUser) {
+    //   return sendSuccessResponse(res, {
+    //     ...ApiResponse.NOT_FOUND,
+    //     message: 'User not found',
+    //     data: []
+    //   });
+    // }
+
+    const targetUser = await UserModel.findById(userId);
+
+    if (!targetUser) {
+      return sendSuccessResponse(res, {
+        ...ApiResponse.NOT_FOUND,
+        message: 'User not found',
+        data: []
+      });
+    }
+
+    // Assign new password (will be hashed automatically by pre-save hook)
+    targetUser.password = data.password;
+    await targetUser.save();
+
+    sendSuccessResponse(res, {
+      ...ApiResponse.SUCCESS,
+      message: 'Password updated successfully',
+      data: targetUser
     });
   } catch (error) {
     // res.status(500).json({ error: 'Something went wrong.' });
@@ -219,5 +277,6 @@ module.exports = {
   getUsersListController,
   getUsersByIdController,
   deleteUsersByIdController,
-  updateUserController
+  updateUserController,
+  changePasswordController
 };
