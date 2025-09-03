@@ -17,6 +17,9 @@ initializeDBConnection();
 
 app.use('/api', initRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}/api`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on http://localhost:${PORT}/api`);
+// });
+
+// ✅ DO NOT use app.listen() on Vercel
+module.exports = app;
