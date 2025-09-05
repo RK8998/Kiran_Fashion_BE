@@ -1,9 +1,10 @@
 // import mongoose from 'mongoose';
 const mongoose = require('mongoose');
+const { NODE_ENV, DEVELOPMENT_DB_URI, PRODUCTION_DB_URI } = require('../constant/env.constant');
 
 const connection = mongoose.connection;
 
-const dbURI = process.env.DB_URI;
+const dbURI = NODE_ENV === 'development' ? DEVELOPMENT_DB_URI : PRODUCTION_DB_URI;
 const databaseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -19,7 +20,7 @@ const initializeDBConnection = () => {
 };
 
 connection.on('connected', () => {
-  console.log(`MongoDB connected at kiran_fashion DB`);
+  console.log(`MongoDB connected at kiran_fashion DB [${NODE_ENV}]`);
 });
 
 connection.on('disconnected', () => {

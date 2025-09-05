@@ -129,21 +129,35 @@ const getSalesByIdController = async (req, res) => {
 
 const createSalesController = async (req, res) => {
   try {
-    const data = req.body;
+    const bodyData = req.body;
+    const numberOfEntries = bodyData.number_of_entries ? Number(bodyData.number_of_entries) : 1;
+    const data = { ...bodyData };
+
+    delete data.number_of_entries;
 
     // const profit = (data.sell_amount - data.base_amount).toFixed(2);
 
-    const newSales = new SalesModel({
-      ...data,
-      user_id: req.user._id
-      // profit: Number(profit)
-    });
+    // const newSales = new SalesModel({
+    //   ...data,
+    //   user_id: req.user._id
+    //   // profit: Number(profit)
+    // });
 
-    await newSales.save();
+    // await newSales.save();
+
+    // create an array of sales entries
+    const salesToInsert = Array.from({ length: numberOfEntries }, () => ({
+      ...data,
+      user_id: req.user._id,
+      profit: data.sell_amount - (data.discount || 0) - data.base_amount
+    }));
+
+    // insert many sales in one go
+    const newSales = await SalesModel.insertMany(salesToInsert);
 
     sendSuccessResponse(res, {
       ...ApiResponse.SUCCESS,
-      message: 'Sales Created Successfully.',
+      message: numberOfEntries + 'Sales Created Successfully.',
       data: newSales
     });
   } catch (error) {
