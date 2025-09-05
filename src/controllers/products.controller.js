@@ -1,10 +1,11 @@
 const ProductModel = require('../models/products.js');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/response');
 const { ApiResponse } = require('../utils/constants');
+const { DEFAULT_SORT_ORDER } = require('../constant/app.constant.js');
 
 const getProductsListController = async (req, res) => {
   try {
-    const { page, rows, search = '' } = req.query;
+    const { page, rows, search = '', sort = DEFAULT_SORT_ORDER } = req.query;
     const offset = (page - 1) * rows;
 
     const filter = { deleted_at: null };
@@ -13,7 +14,12 @@ const getProductsListController = async (req, res) => {
       filter['name'] = regex;
     }
 
-    const results = await ProductModel.find(filter).skip(offset).limit(rows).sort({ _id: -1 });
+    const sortValue = sort === 'asc' ? 1 : -1;
+
+    const results = await ProductModel.find(filter)
+      .skip(offset)
+      .limit(rows)
+      .sort({ _id: sortValue });
     const totalRecords = await ProductModel.countDocuments(filter);
 
     sendSuccessResponse(res, {

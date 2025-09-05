@@ -57,10 +57,15 @@ salesSchema.index({ base_amount: 1, sell_amount: 1, profit: 1 });
  * ✅ Pre-save middleware
  * This will calculate profit before inserting or updating using save()
  */
-salesSchema.pre('save', function (next) {
-  this.profit = this.sell_amount - this.discount - this.base_amount;
-  next();
-});
+// salesSchema.pre('save', function (next) {
+//   this.profit = this.sell_amount - this.discount - this.base_amount;
+//   next();
+// });
+
+// salesSchema.pre('insertMany', function (next) {
+//   this.profit = this.sell_amount - this.discount - this.base_amount;
+//   next();
+// });
 
 /**
  * ✅ Pre-update middleware for findOneAndUpdate
